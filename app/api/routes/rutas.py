@@ -29,7 +29,7 @@ def getDataBase():
 def guardarUsuario(datosPeticion:UsuarioDTOPeticion,db:Session=Depends(getDataBase)):
    try:
       usuario= Usuario(
-         nombre=datosPeticion.nombre,
+         nombres=datosPeticion.nombres,
          edad=datosPeticion.edad,
          telefono=datosPeticion.telefono,
          correo=datosPeticion.correo,
@@ -108,8 +108,17 @@ def guardarMetodoPago(datosPeticion:MetodoPagoDTOPeticion,db:Session=Depends(get
 @rutas.get("/usuarios",response_model=List[UsuarioDTORespuesta])
 def buscarUsuarios(db:Session=Depends(getDataBase)):
    try:
-      listadoDeUsuarios=db.query(Usuario).all
-      return listadoDeUsuarios
+      listadoDeUsuarios=db.query(Usuario).all()
+      return [ #Hacerlo en todos los get
+         
+         UsuarioDTORespuesta(
+            id=usuario.id,
+            nombres=usuario.nombre,
+            telefono=usuario.telefono,
+            ciudad=usuario.ciudad
+
+         ) for usuario in listadoDeUsuarios
+      ]
    except Exception as error:
       db.rollback()
       raise HTTPException(status_code=400, detail=f"Error al regisytrar el usuario {error}")   

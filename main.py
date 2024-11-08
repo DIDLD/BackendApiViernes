@@ -5,6 +5,9 @@ from app.api.models.modelosApp import Usuario,Base
 from app.api.routes.rutas import rutas
 
 from starlette.responses import RedirectResponse
+from starlette.middleware.cors import CORSMiddleware
+
+
 #ACTIVAR LA ORM
 Base.metadata.create_all(bind=engine)
 
@@ -13,6 +16,18 @@ Base.metadata.create_all(bind=engine)
 
 #VARIABLE PARA ADMINISTRAR LA APLICACION 
 app=FastAPI()
+
+
+#activando cors
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 #ACTIVO EL API
 @app.get("/")
